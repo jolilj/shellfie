@@ -9,9 +9,9 @@ import motorcontroller
 
 CAL_TIME = 5
 #initialize PID controller constants
-KP = 760
-KI = 220
-KD = 5
+KP = 650
+KI = 180
+KD = 10
 I_THRESHOLD = 4
 TARGET_ANGLE = 0
 
@@ -117,8 +117,8 @@ try:
 				i_err_time = 0
 			err = err + dt*error
 
-			if abs(error) < math.radians(1.6):
-				error = error*1.4
+			if abs(error) < math.radians(1.5):
+				error = error*1.6
 
 
 			if abs(error) < math.radians(I_THRESHOLD):
@@ -137,7 +137,7 @@ try:
 			#print(speed)
 			motorcontroller.set_speed(speed)
 			#print(math.degrees(angle))
-			#time.sleep(poll_interval*1.0/1000.0)
+			time.sleep(poll_interval*1.0/1000.0)
 			prevTime = currentTime
 			prevError = error
 except KeyboardInterrupt:

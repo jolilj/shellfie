@@ -9,10 +9,10 @@ import motorcontroller
 
 CAL_TIME = 5
 #initialize PID controller constants
-KP = 760
-KI = 220
-KD = 5
-I_THRESHOLD = 4
+KP = 700
+KI = 150
+KD = 10
+I_THRESHOLD = 2
 TARGET_ANGLE = 0
 
 #Setting up I2C comunication with the IMU
@@ -111,14 +111,14 @@ try:
 			angle = updateAngle(dt, angle)
 			error = angle - TARGET_ANGLE
 			
-			if i_err_time > 0.8:
+			if i_err_time > 0.7:
 				print("Resetting I_term")
 				err = 0
 				i_err_time = 0
 			err = err + dt*error
 
-			if abs(error) < math.radians(1.6):
-				error = error*1.4
+			#if abs(error) > math.radians(4):
+			#	error = error*2
 
 
 			if abs(error) < math.radians(I_THRESHOLD):
@@ -130,14 +130,12 @@ try:
 			I_term = KI*err
 			D_term = KD*float((error-prevError))/dt
 
-			if abs(I_term) > 80:
-				I_term = I_term/abs(I_term)*80
 			#print(str(P_term) + " " + str(I_term))
 			speed = P_term+I_term+D_term
 			#print(speed)
 			motorcontroller.set_speed(speed)
 			#print(math.degrees(angle))
-			#time.sleep(poll_interval*1.0/1000.0)
+			time.sleep(poll_interval*1.0/1000.0)
 			prevTime = currentTime
 			prevError = error
 except KeyboardInterrupt:
